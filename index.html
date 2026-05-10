@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TSBoS — Taraba State Bureau of Statistics</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════════════════════
+   ROOT
+══════════════════════════════════════════════════════════ */
+:root {
+  --ink:        #0a1628;
+  --ink-soft:   #3d4f6b;
+  --ink-muted:  #7a8fa8;
+  --surface:    #f4f5f0;
+  --white:      #ffffff;
+  --border:     #dde2d8;
+  --green:      #1b5e35;
+  --green-mid:  #2d8a55;
+  --green-lt:   #eaf3ec;
+  --gold:       #c9861a;
+  --gold-lt:    #fef5e6;
+  --red:        #b83232;
+  --red-lt:     #fdecea;
+  --cream:      #f9f7f0;
+  --shadow:     0 2px 20px rgba(10,22,40,.08);
+  --shadow-lg:  0 8px 48px rgba(10,22,40,.14);
+  --r:          4px;
+  --r-lg:       12px;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+  display: flex; align-items: center;
+  padding: 0 2rem;
+  transition: box-shadow .3s;
+}
+nav.scrolled { box-shadow: var(--shadow); }
+.nav-inner {
+  max-width: 1400px; margin: 0 auto; width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+}
+.nav-seal {
+  width: 36px; height: 36px; background: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-seal svg { width: 20px; height: 20px; fill: #fff; }
+.nav-title {
+  font-family: 'Playfair Display', serif;
+  font-size: .9rem; font-weight: 700;
+  color: var(--green); line-height: 1.1;
+  letter-spacing: -.01em;
+}
+.nav-sub { font-size: .6rem; color: var(--ink-muted); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a {
+  font-size: .8rem; font-weight: 600; color: var(--ink-soft);
+  text-decoration: none; letter-spacing: .02em;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--green); }
+.nav-links a.active { color: var(--green); }
+.nav-cta {
+  background: var(--green); color: #fff !important;
+  padding: 8px 20px; border-radius: 20px;
+  font-size: .75rem !important; font-weight: 700 !important;
+  letter-spacing: .04em; text-transform: uppercase;
+  transition: background .2s !important;
+}
+.nav-cta:hover { background: #0f3d22 !important; }
+
+/* ══════════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  background: var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+.hero-left {
+  padding: 140px 3rem 80px 4rem;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; z-index: 2;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px; padding: 5px 14px;
+  font-size: .68rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,.5);
+  margin-bottom: 1.5rem; width: fit-content;
+  animation: fadeUp .8s ease both;
+}
+.hero-eyebrow span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green-mid); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+
+.hero-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 900; line-height: 1.04;
+  color: #fff; letter-spacing: -.03em;
+  margin-bottom: 1.5rem;
+  animation: fadeUp .8s .1s ease both;
+}
+.hero-headline em {
+  font-style: italic; color: var(--green-mid);
+}
+.hero-sub {
+  font-size: 1rem; color: rgba(255,255,255,.5);
+  line-height: 1.7; max-width: 440px;
+  margin-bottom: 2.5rem;
+  animation: fadeUp .8s .2s ease both;
+}
+.hero-actions {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  animation: fadeUp .8s .3s ease both;
+}
+.btn-primary {
+  background: var(--green); color: #fff;
+  padding: 14px 28px; border-radius: 4px;
+  font-size: .8rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; text-decoration: none;
+  transition: background .2s, transform .2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: #0f3d22; transform: translateY(-1px); }
+.btn-outline {
+  border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.7);
+  padding: 14px 28px; border-radius: 4px;
+  font-size: .8rem; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; text-decoration: none;
+  transition: border-color .2s, color .2s;
+}
+.btn-outline:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+  animation: fadeUp .8s .4s ease both;
+}
+.hero-stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 700; color: #fff; line-height: 1;
+}
+.hero-stat-label {
+  font-size: .68rem; color: rgba(255,255,255,.35);
+  font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Hero right — live data panel */
+.hero-right {
+  display: flex; align-items: center; justify-content: center;
+  padding: 140px 4rem 80px 2rem;
+  position: relative; z-index: 2;
+  animation: fadeUp .8s .3s ease both;
+}
+.hero-panel {
+  width: 100%; max-width: 480px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px; overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+.panel-header {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.panel-live { display: flex; align-items: center; gap: 6px; font-size: .68rem; color: var(--green-mid); font-weight: 600; }
+.panel-live::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--green-mid); animation: pulse 2s infinite; }
+.panel-kpis {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; padding: 0;
+}
+.panel-kpi {
+  padding: 1.2rem 1.4rem;
+  border-right: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.panel-kpi:nth-child(even) { border-right: none; }
+.panel-kpi:nth-last-child(-n+2) { border-bottom: none; }
+.pkpi-label { font-size: .65rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 6px; }
+.pkpi-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1; }
+.pkpi-val sup { font-size: .8rem; }
+.pkpi-chg { font-size: .7rem; margin-top: 4px; font-weight: 600; }
+.pkpi-chg.up { color: #f87171; }
+.pkpi-chg.dn { color: #6ee7b7; }
+.panel-chart { padding: 1.2rem 1.4rem; border-top: 1px solid rgba(255,255,255,.06); }
+.panel-chart-title { font-size: .65rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: .8rem; }
+.panel-chart-wrap { position: relative; height: 80px; width: 100%; }
+
+/* Hero background pattern */
+#hero::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(27,94,53,.3) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(201,134,26,.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+#hero::after {
+  content:''; position:absolute; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TICKER BAND
+══════════════════════════════════════════════════════════ */
+.ticker {
+  background: var(--green);
+  padding: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  position: relative;
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 50s linear infinite;
+  will-change: transform;
+}
+.ticker-item {
+  display: inline-flex; align-items: center; gap: 2rem;
+  padding: 0 2.5rem;
+  font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: rgba(255,255,255,.8);
+  flex-shrink: 0;
+}
+.ticker-item strong { color: #fff; }
+.ticker-item::after {
+  content: '◆'; color: rgba(255,255,255,.2); font-size: .5rem;
+}
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   SECTIONS SHARED
+══════════════════════════════════════════════════════════ */
+section { padding: 6rem 2rem; }
+.container { max-width: 1400px; margin: 0 auto; }
+.section-label {
+  font-size: .68rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--green-mid);
+  margin-bottom: .75rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label::before {
+  content: ''; width: 24px; height: 2px; background: var(--green-mid);
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 700; line-height: 1.1; letter-spacing: -.02em;
+  color: var(--ink); margin-bottom: 1rem;
+}
+.section-desc {
+  font-size: .95rem; color: var(--ink-soft); line-height: 1.7;
+  max-width: 540px;
+}
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ══════════════════════════════════════════════════════════
+   INDICATORS SECTION
+══════════════════════════════════════════════════════════ */
+#indicators { background: var(--cream); }
+.ind-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;
+}
+.ind-tabs {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.ind-tab {
+  padding: 8px 18px; border-radius: 20px;
+  font-size: .75rem; font-weight: 700; letter-spacing: .04em;
+  cursor: pointer; border: 1px solid var(--border);
+  background: transparent; color: var(--ink-soft);
+  transition: all .2s; font-family: 'Syne', sans-serif;
+}
+.ind-tab.active { background: var(--green); border-color: var(--green); color: #fff; }
+.ind-tab:hover:not(.active) { border-color: var(--green); color: var(--green); }
+
+.ind-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.ind-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.4rem; position: relative; overflow: hidden;
+  transition: box-shadow .25s, transform .25s;
+  cursor: pointer;
+}
+.ind-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+.ind-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.ind-card.green::before  { background: var(--green); }
+.ind-card.gold::before   { background: var(--gold); }
+.ind-card.red::before    { background: var(--red); }
+.ind-card.blue::before   { background: #1a4a7a; }
+.ic-label { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: .75rem; }
+.ic-val { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; line-height: 1; color: var(--ink); }
+.ic-val sup { font-size: 1rem; }
+.ic-sub { font-size: .75rem; margin-top: .5rem; font-weight: 600; }
+.ic-sub.up   { color: var(--red); }
+.ic-sub.down { color: var(--green-mid); }
+.ic-sub.neu  { color: var(--ink-muted); }
+.ic-period { font-size: .68rem; color: var(--ink-muted); margin-top: .35rem; font-weight: 500; }
+
+/* Big chart row */
+.chart-row {
+  display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem;
+}
+.chart-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+}
+.cc-header {
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cc-title { font-size: .82rem; font-weight: 700; color: var(--ink); }
+.cc-pill {
+  font-size: .65rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 20px; letter-spacing: .04em;
+}
+.pill-g  { background: var(--green-lt); color: var(--green); }
+.pill-go { background: var(--gold-lt);  color: var(--gold); }
+.pill-r  { background: var(--red-lt);   color: var(--red);  }
+.cc-body { padding: 1.2rem 1.4rem; }
+
+/* Progress bars */
+.bar-list { display: flex; flex-direction: column; gap: .9rem; }
+.bar-item {}
+.bar-meta { display: flex; justify-content: space-between; margin-bottom: .3rem; }
+.bar-name { font-size: .76rem; font-weight: 600; color: var(--ink-soft); }
+.bar-pct  { font-size: .76rem; font-weight: 700; color: var(--ink); }
+.bar-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 99px; transition: width 1.2s cubic-bezier(.25,.46,.45,.94); }
+
+/* ══════════════════════════════════════════════════════════
+   ABOUT / INTRO STRIP
+══════════════════════════════════════════════════════════ */
+#about {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+}
+.about-col {
+  padding: 4rem 3rem;
+  border-right: 1px solid var(--border);
+}
+.about-col:last-child { border-right: none; }
+.about-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: var(--green-lt);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.about-icon svg { width: 24px; height: 24px; stroke: var(--green); fill: none; stroke-width: 1.8; }
+.about-col h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700; margin-bottom: .75rem;
+  color: var(--ink); letter-spacing: -.01em;
+}
+.about-col p { font-size: .85rem; color: var(--ink-soft); line-height: 1.7; }
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD SHOWCASE
+══════════════════════════════════════════════════════════ */
+#dashboards { background: var(--ink); }
+#dashboards .section-label { color: rgba(255,255,255,.4); }
+#dashboards .section-label::before { background: rgba(255,255,255,.2); }
+#dashboards .section-title { color: #fff; }
+#dashboards .section-desc { color: rgba(255,255,255,.5); }
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 3rem;
+}
+.dash-card {
+  border-radius: var(--r-lg); overflow: hidden;
+  border: 1px solid rgba(255,255,255,.07);
+  transition: transform .3s, border-color .3s;
+  cursor: pointer;
+  background: rgba(255,255,255,.03);
+}
+.dash-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.18); }
+.dash-card.featured {
+  grid-column: span 2;
+}
+.dash-thumb {
+  height: 200px; overflow: hidden;
+  background: linear-gradient(135deg, var(--green) 0%, #0f3d22 100%);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.dash-card.featured .dash-thumb { height: 280px; }
+.dash-thumb-inner { width: 90%; }
+.dash-thumb canvas { width: 100% !important; opacity: .9; }
+.dash-thumb-alt {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: .5rem;
+  padding: 1.5rem;
+}
+.dash-thumb-alt .big-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem; font-weight: 900; color: rgba(255,255,255,.9);
+}
+.dash-thumb-alt .big-label {
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.4);
+}
+.dash-info {
+  padding: 1.2rem 1.4rem;
+}
+.dash-tag {
+  font-size: .65rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--green-mid); margin-bottom: .5rem;
+}
+.dash-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700; color: #fff;
+  margin-bottom: .4rem;
+}
+.dash-desc { font-size: .78rem; color: rgba(255,255,255,.35); line-height: 1.5; }
+.dash-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: .9rem;
+  padding-top: .9rem;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.dash-updated { font-size: .68rem; color: rgba(255,255,255,.25); }
+.dash-link {
+  font-size: .7rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--green-mid);
+  text-decoration: none; display: flex; align-items: center; gap: 4px;
+}
+.dash-link:hover { color: #6ee7b7; }
+
+/* ══════════════════════════════════════════════════════════
+   DATA PORTAL CTA
+══════════════════════════════════════════════════════════ */
+#portal {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.portal-inner {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.portal-code {
+  background: var(--ink); border-radius: 12px;
+  padding: 2rem; font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; line-height: 1.7;
+  position: relative; overflow: hidden;
+}
+.portal-code::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: linear-gradient(90deg, var(--green), var(--gold));
+}
+.code-line { display: flex; gap: 1rem; }
+.code-ln { color: rgba(255,255,255,.15); user-select: none; min-width: 20px; }
+.code-fn   { color: #79c0ff; }
+.code-str  { color: #a5d6a7; }
+.code-key  { color: #ffcb6b; }
+.code-op   { color: rgba(255,255,255,.4); }
+.code-com  { color: rgba(255,255,255,.25); font-style: italic; }
+.code-white { color: #fff; }
+.portal-steps { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2.5rem; }
+.portal-step { display: flex; gap: 1rem; align-items: flex-start; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--green-lt); color: var(--green);
+  font-size: .75rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-text h4 { font-size: .85rem; font-weight: 700; color: var(--ink); margin-bottom: .2rem; }
+.step-text p  { font-size: .78rem; color: var(--ink-soft); line-height: 1.5; }
+
+/* ══════════════════════════════════════════════════════════
+   TSBSR PACKAGE FEATURE STRIP
+══════════════════════════════════════════════════════════ */
+#package { background: var(--green); }
+.pkg-inner {
+  display: grid; grid-template-columns: 1fr 2fr; gap: 5rem;
+  align-items: center;
+}
+.pkg-left h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem,3vw,2.8rem);
+  font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -.02em;
+  margin-bottom: 1rem;
+}
+.pkg-left h2 em { font-style: italic; color: rgba(255,255,255,.55); }
+.pkg-left p { font-size: .9rem; color: rgba(255,255,255,.55); line-height: 1.7; margin-bottom: 2rem; }
+.pkg-btn {
+  background: #fff; color: var(--green);
+  padding: 12px 24px; border-radius: 4px;
+  font-size: .78rem; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; text-decoration: none; display: inline-block;
+  transition: opacity .2s;
+}
+.pkg-btn:hover { opacity: .88; }
+.pkg-fns {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .75rem;
+}
+.pkg-fn {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px; padding: .9rem 1rem;
+  transition: background .2s;
+}
+.pkg-fn:hover { background: rgba(255,255,255,.14); }
+.fn-sig {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; color: rgba(255,255,255,.9);
+  font-weight: 500; margin-bottom: .3rem;
+}
+.fn-desc { font-size: .72rem; color: rgba(255,255,255,.4); line-height: 1.4; }
+
+/* ══════════════════════════════════════════════════════════
+   CATEGORIES
+══════════════════════════════════════════════════════════ */
+#categories { background: var(--cream); }
+.cat-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+  margin-top: 3rem;
+}
+.cat-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.5rem 1.2rem;
+  text-align: center; cursor: pointer;
+  transition: all .25s;
+  position: relative; overflow: hidden;
+}
+.cat-card:hover {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px var(--green-lt);
+  transform: translateY(-3px);
+}
+.cat-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: var(--green); opacity: 0;
+  transition: opacity .25s;
+}
+.cat-card:hover::after { opacity: .03; }
+.cat-icon {
+  width: 52px; height: 52px; margin: 0 auto 1rem;
+  border-radius: 12px; background: var(--green-lt);
+  display: flex; align-items: center; justify-content: center;
+}
+.cat-icon svg { width: 26px; height: 26px; stroke: var(--green); fill: none; stroke-width: 1.6; }
+.cat-name { font-size: .85rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.cat-count { font-size: .7rem; color: var(--ink-muted); }
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════════ */
+footer {
+  background: var(--ink);
+  padding: 4rem 2rem 2rem;
+}
+.footer-inner {
+  max-width: 1400px; margin: 0 auto;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem; margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.footer-brand {}
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: .75rem;
+}
+.footer-tagline { font-size: .82rem; color: rgba(255,255,255,.35); line-height: 1.6; max-width: 280px; }
+.footer-col h5 {
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.25);
+  margin-bottom: 1rem;
+}
+.footer-col a {
+  display: block; font-size: .82rem; color: rgba(255,255,255,.45);
+  text-decoration: none; margin-bottom: .6rem;
+  transition: color .2s;
+}
+.footer-col a:hover { color: rgba(255,255,255,.85); }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy { font-size: .75rem; color: rgba(255,255,255,.2); }
+.footer-badges { display: flex; gap: .75rem; }
+.badge {
+  font-size: .65rem; font-weight: 700; letter-spacing: .06em;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  #hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-left { padding: 130px 2rem 80px; }
+  .ind-grid { grid-template-columns: 1fr 1fr; }
+  .chart-row { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-col { border-right: none; border-bottom: 1px solid var(--border); }
+  .dash-grid { grid-template-columns: 1fr; }
+  .dash-card.featured { grid-column: span 1; }
+  .portal-inner { grid-template-columns: 1fr; }
+  .pkg-inner { grid-template-columns: 1fr; }
+  .pkg-fns { grid-template-columns: 1fr 1fr; }
+  .cat-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .ind-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ────────────────────────────────────────────────────────────────── -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-seal">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="nav-title">TSBoS</div>
+        <div class="nav-sub">Taraba State Bureau of Statistics</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#indicators" class="active">Data</a>
+      <a href="#dashboards">Dashboards</a>
+      <a href="#portal">Portal</a>
+      <a href="#package">tsbsR</a>
+      <a href="#categories">Categories</a>
+      <a href="#" class="nav-cta">Get Data</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ───────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span></span>
+      Live Statistical Data Portal
+    </div>
+    <h1 class="hero-headline">
+      Taraba's<br/>
+      <em>official</em><br/>
+      data story.
+    </h1>
+    <p class="hero-sub">
+      The Taraba State Bureau of Statistics publishes authoritative data on prices, economy, population, agriculture, health, education, labour, and infrastructure — accessible to all through the open data portal and the tsbsR package.
+    </p>
+    <div class="hero-actions">
+      <a href="#portal" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Access Data
+      </a>
+      <a href="#dashboards" class="btn-outline">View Dashboards →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val">277+</div>
+        <div class="hero-stat-label">Observations</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">8</div>
+        <div class="hero-stat-label">Categories</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">Free</div>
+        <div class="hero-stat-label">Open Access</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-panel">
+      <div class="panel-header">
+        <span class="panel-title">Key Indicators · Q1 2026</span>
+        <span class="panel-live">Live</span>
+      </div>
+      <div class="panel-kpis">
+        <div class="panel-kpi">
+          <div class="pkpi-label">Headline Inflation</div>
+          <div class="pkpi-val">24.5<sup>%</sup></div>
+          <div class="pkpi-chg up">▲ 1.2pp YoY</div>
+        </div>
+        <div class="panel-kpi">
+          <div class="pkpi-label">Food Inflation</div>
+          <div class="pkpi-val">29.3<sup>%</sup></div>
+          <div class="pkpi-chg up">▲ 2.1pp YoY</div>
+        </div>
+        <div class="panel-kpi">
+          <div class="pkpi-label">Core Inflation</div>
+          <div class="pkpi-val">18.7<sup>%</sup></div>
+          <div class="pkpi-chg dn">▼ 0.4pp YoY</div>
+        </div>
+        <div class="panel-kpi">
+          <div class="pkpi-label">12M Average</div>
+          <div class="pkpi-val">21.8<sup>%</sup></div>
+          <div class="pkpi-chg dn">▼ Stable trend</div>
+        </div>
+      </div>
+      <div class="panel-chart">
+        <div class="panel-chart-title">Inflation Trend · 12 Months</div>
+        <div class="panel-chart-wrap">
+          <canvas id="heroChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TICKER ──────────────────────────────────────────────────────────────── -->
+<div class="ticker">
+  <div class="ticker-track" id="ticker">
+    <div class="ticker-item">Headline Inflation <strong>24.5%</strong></div>
+    <div class="ticker-item">Food Inflation <strong>29.3%</strong></div>
+    <div class="ticker-item">Core Inflation <strong>18.7%</strong></div>
+    <div class="ticker-item">12M Average CPI <strong>21.8%</strong></div>
+    <div class="ticker-item">GDP Growth <strong>3.2%</strong></div>
+    <div class="ticker-item">Unemployment Rate <strong>14.6%</strong></div>
+    <div class="ticker-item">Literacy Rate <strong>61.4%</strong></div>
+    <div class="ticker-item">Population <strong>3.18M</strong></div>
+    <div class="ticker-item">Headline Inflation <strong>24.5%</strong></div>
+    <div class="ticker-item">Food Inflation <strong>29.3%</strong></div>
+    <div class="ticker-item">Core Inflation <strong>18.7%</strong></div>
+    <div class="ticker-item">12M Average CPI <strong>21.8%</strong></div>
+    <div class="ticker-item">GDP Growth <strong>3.2%</strong></div>
+    <div class="ticker-item">Unemployment Rate <strong>14.6%</strong></div>
+    <div class="ticker-item">Literacy Rate <strong>61.4%</strong></div>
+    <div class="ticker-item">Population <strong>3.18M</strong></div>
+  </div>
+</div>
+
+<!-- ── INDICATORS ─────────────────────────────────────────────────────────── -->
+<section id="indicators">
+  <div class="container">
+    <div class="ind-header reveal">
+      <div>
+        <div class="section-label">Live Indicators</div>
+        <h2 class="section-title">Taraba by the numbers</h2>
+      </div>
+      <div class="ind-tabs">
+        <button class="ind-tab active" onclick="switchTab('prices',this)">Prices</button>
+        <button class="ind-tab" onclick="switchTab('economy',this)">Economy</button>
+        <button class="ind-tab" onclick="switchTab('social',this)">Social</button>
+      </div>
+    </div>
+
+    <div class="ind-grid reveal" id="kpi-grid">
+      <div class="ind-card green">
+        <div class="ic-label">Headline Inflation</div>
+        <div class="ic-val">24.5<sup>%</sup></div>
+        <div class="ic-sub up">▲ +1.2pp vs last quarter</div>
+        <div class="ic-period">Q1 2026 · Year-on-Year</div>
+      </div>
+      <div class="ind-card gold">
+        <div class="ic-label">Food Inflation</div>
+        <div class="ic-val">29.3<sup>%</sup></div>
+        <div class="ic-sub up">▲ +2.1pp vs last quarter</div>
+        <div class="ic-period">Q1 2026 · Year-on-Year</div>
+      </div>
+      <div class="ind-card red">
+        <div class="ic-label">Core (ex-Farm)</div>
+        <div class="ic-val">18.7<sup>%</sup></div>
+        <div class="ic-sub down">▼ −0.4pp vs last quarter</div>
+        <div class="ic-period">Q1 2026 · Year-on-Year</div>
+      </div>
+      <div class="ind-card blue">
+        <div class="ic-label">12-Month Average</div>
+        <div class="ic-val">21.8<sup>%</sup></div>
+        <div class="ic-sub neu">→ Stable trend</div>
+        <div class="ic-period">Rolling 12 months</div>
+      </div>
+    </div>
+
+    <div class="chart-row reveal">
+      <div class="chart-card">
+        <div class="cc-header">
+          <span class="cc-title">Inflation Trend — Headline vs Food vs Core</span>
+          <span class="cc-pill pill-g">YoY %</span>
+        </div>
+        <div class="cc-body">
+          <canvas id="mainChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="cc-header">
+          <span class="cc-title">Basket Breakdown</span>
+          <span class="cc-pill pill-go">Q1 2026</span>
+        </div>
+        <div class="cc-body">
+          <div class="bar-list" id="barList">
+            <div class="bar-item">
+              <div class="bar-meta"><span class="bar-name">Food & Beverages</span><span class="bar-pct">29.3%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:82%;background:#b83232"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span class="bar-name">Transport</span><span class="bar-pct">22.1%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:62%;background:#c9861a"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span class="bar-name">Housing & Utilities</span><span class="bar-pct">19.4%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:54%;background:#1a4a7a"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span class="bar-name">Health</span><span class="bar-pct">16.2%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:45%;background:#1b5e35"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span class="bar-name">Education</span><span class="bar-pct">13.5%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:38%;background:#6b3fa0"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta"><span class="bar-name">Clothing & Footwear</span><span class="bar-pct">11.8%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:33%;background:#0891b2"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT STRIP ─────────────────────────────────────────────────────────── -->
+<section id="about">
+  <div class="about-grid reveal">
+    <div class="about-col">
+      <div class="about-icon">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <h3>Authoritative Data</h3>
+      <p>All datasets are produced according to national and international statistical standards. TSBoS is the apex statistical agency for Taraba State and the custodian of all official State statistics.</p>
+    </div>
+    <div class="about-col">
+      <div class="about-icon">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3>Regular Updates</h3>
+      <p>Indicators are updated quarterly or annually depending on the series. Every release is version-controlled and archived permanently, with full provenance traceable through the tsbsR package.</p>
+    </div>
+    <div class="about-col">
+      <div class="about-icon">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3>Open Access</h3>
+      <p>All published datasets are freely available. Researchers and developers can access data through this portal or programmatically via the tsbsR R package with a single function call.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── DASHBOARDS ─────────────────────────────────────────────────────────── -->
+<section id="dashboards">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Interactive Dashboards</div>
+      <h2 class="section-title">Data, visualised.</h2>
+      <p class="section-desc">Explore Taraba's key indicators through interactive charts and dashboards — built with R and tsbsR, hosted on the open data portal.</p>
+    </div>
+    <div class="dash-grid reveal">
+      <!-- Featured -->
+      <div class="dash-card featured">
+        <div class="dash-thumb">
+          <div class="dash-thumb-inner">
+            <canvas id="dashChart1" height="130"></canvas>
+          </div>
+        </div>
+        <div class="dash-info">
+          <div class="dash-tag">Prices & Inflation</div>
+          <div class="dash-name">Consumer Price Index Monitor</div>
+          <div class="dash-desc">Full breakdown of headline, food, and core inflation with historical trends, monthly CPI movements, and basket composition.</div>
+          <div class="dash-meta">
+            <span class="dash-updated">Updated Q1 2026</span>
+            <a href="index.html" class="dash-link">Open dashboard →</a>
+          </div>
+        </div>
+      </div>
+      <!-- Regular -->
+      <div class="dash-card">
+        <div class="dash-thumb" style="background:linear-gradient(135deg,#1a3a6b,#0d2040)">
+          <div class="dash-thumb-alt">
+            <div class="big-num">3.2%</div>
+            <div class="big-label">GDP Growth</div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <div class="dash-tag">Economy & GDP</div>
+          <div class="dash-name">Economic Indicators</div>
+          <div class="dash-desc">Sectoral output, fiscal data, and economic growth indicators for Taraba State.</div>
+          <div class="dash-meta">
+            <span class="dash-updated">Coming Q2 2026</span>
+            <a href="#" class="dash-link">Preview →</a>
+          </div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-thumb" style="background:linear-gradient(135deg,#c9861a,#8a5a0f)">
+          <div class="dash-thumb-alt">
+            <div class="big-num">3.18M</div>
+            <div class="big-label">Population</div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <div class="dash-tag">Population</div>
+          <div class="dash-name">Demographics Monitor</div>
+          <div class="dash-desc">Census data, population projections, age structure, and demographic trends across Taraba State.</div>
+          <div class="dash-meta">
+            <span class="dash-updated">Coming Q2 2026</span>
+            <a href="#" class="dash-link">Preview →</a>
+          </div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-thumb" style="background:linear-gradient(135deg,#2d6a4f,#1b3a2d)">
+          <div class="dash-thumb-alt">
+            <div class="big-num">61%</div>
+            <div class="big-label">Literacy Rate</div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <div class="dash-tag">Education</div>
+          <div class="dash-name">Education Statistics</div>
+          <div class="dash-desc">School enrolment rates, literacy statistics, and education outcomes across Taraba State LGAs.</div>
+          <div class="dash-meta">
+            <span class="dash-updated">Coming Q3 2026</span>
+            <a href="#" class="dash-link">Preview →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DATA PORTAL ─────────────────────────────────────────────────────────── -->
+<section id="portal">
+  <div class="container">
+    <div class="portal-inner reveal">
+      <div>
+        <div class="section-label" style="color:var(--green-mid)">Open Data Portal</div>
+        <h2 class="section-title">Data in four<br/>lines of R.</h2>
+        <p class="section-desc">Install tsbsR and access any Taraba State dataset directly in R — no manual downloads, no spreadsheets.</p>
+        <div class="portal-steps">
+          <div class="portal-step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <h4>Install the package</h4>
+              <p>One command installs tsbsR and all dependencies from GitHub.</p>
+            </div>
+          </div>
+          <div class="portal-step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <h4>Authenticate once</h4>
+              <p>Store your GitHub token securely. It persists across all R sessions.</p>
+            </div>
+          </div>
+          <div class="portal-step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <h4>Get any dataset</h4>
+              <p>Call tsbs_get() with a category and optional period. Data arrives as a clean dataframe.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portal-code">
+        <div class="code-line">
+          <span class="code-ln">1</span>
+          <span><span class="code-com"># Install tsbsR from GitHub</span></span>
+        </div>
+        <div class="code-line">
+          <span class="code-ln">2</span>
+          <span><span class="code-fn">devtools</span><span class="code-op">::</span><span class="code-fn">install_github</span><span class="code-op">(</span><span class="code-str">"laws2020/tsbsR"</span><span class="code-op">)</span></span>
+        </div>
+        <div class="code-line"><span class="code-ln">3</span><span>&nbsp;</span></div>
+        <div class="code-line">
+          <span class="code-ln">4</span>
+          <span><span class="code-key">library</span><span class="code-op">(</span><span class="code-white">tsbsR</span><span class="code-op">)</span></span>
+        </div>
+        <div class="code-line"><span class="code-ln">5</span><span>&nbsp;</span></div>
+        <div class="code-line">
+          <span class="code-ln">6</span>
+          <span><span class="code-com"># Authenticate once</span></span>
+        </div>
+        <div class="code-line">
+          <span class="code-ln">7</span>
+          <span><span class="code-fn">tsbs_connect</span><span class="code-op">(</span><span class="code-str">"ghp_your_token"</span><span class="code-op">)</span></span>
+        </div>
+        <div class="code-line"><span class="code-ln">8</span><span>&nbsp;</span></div>
+        <div class="code-line">
+          <span class="code-ln">9</span>
+          <span><span class="code-com"># Get the latest prices dataset</span></span>
+        </div>
+        <div class="code-line">
+          <span class="code-ln">10</span>
+          <span><span class="code-white">df</span> <span class="code-op">&lt;-</span> <span class="code-fn">tsbs_get</span><span class="code-op">(</span><span class="code-str">"prices"</span><span class="code-op">)</span></span>
+        </div>
+        <div class="code-line"><span class="code-ln">11</span><span>&nbsp;</span></div>
+        <div class="code-line">
+          <span class="code-ln">12</span>
+          <span><span class="code-com"># Plot it instantly</span></span>
+        </div>
+        <div class="code-line">
+          <span class="code-ln">13</span>
+          <span><span class="code-fn">tsbs_plot</span><span class="code-op">(</span><span class="code-str">"prices"</span><span class="code-op">,</span> <span class="code-key">type</span> <span class="code-op">=</span> <span class="code-str">"line"</span><span class="code-op">)</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PACKAGE STRIP ───────────────────────────────────────────────────────── -->
+<section id="package">
+  <div class="container">
+    <div class="pkg-inner reveal">
+      <div class="pkg-left">
+        <h2>16 functions.<br/><em>One package.</em></h2>
+        <p>tsbsR is the complete R toolkit for TSBoS statistical data — publish, retrieve, search, visualise, and track every dataset from within R.</p>
+        <a href="https://github.com/laws2020/tsbsR" class="pkg-btn">View on GitHub →</a>
+      </div>
+      <div class="pkg-fns">
+        <div class="pkg-fn"><div class="fn-sig">tsbs_get()</div><div class="fn-desc">Download any dataset as a dataframe</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_publish()</div><div class="fn-desc">Upload datasets to the portal</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_plot()</div><div class="fn-desc">Auto-generate ggplot2 charts</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_trends()</div><div class="fn-desc">Multi-period time series</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_catalogue()</div><div class="fn-desc">Browse all published datasets</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_summary()</div><div class="fn-desc">Stats and metadata in one call</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_download()</div><div class="fn-desc">Export as CSV, Excel or JSON</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_search()</div><div class="fn-desc">Search datasets by keyword</div></div>
+        <div class="pkg-fn"><div class="fn-sig">tsbs_changelog()</div><div class="fn-desc">Full dataset version history</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CATEGORIES ─────────────────────────────────────────────────────────── -->
+<section id="categories">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem">
+      <div class="section-label" style="justify-content:center">Data Categories</div>
+      <h2 class="section-title">Every dimension<br/>of Taraba State.</h2>
+    </div>
+    <div class="cat-grid reveal">
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="cat-name">Prices</div>
+        <div class="cat-count">CPI · Inflation · Cost of Living</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div class="cat-name">Economy</div>
+        <div class="cat-count">GDP · Fiscal · Output</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="cat-name">Population</div>
+        <div class="cat-count">Census · Demographics · Projections</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="cat-name">Agriculture</div>
+        <div class="cat-count">Crops · Land Use · Livestock</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="cat-name">Education</div>
+        <div class="cat-count">Enrolment · Literacy · Outcomes</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="cat-name">Health</div>
+        <div class="cat-count">Mortality · Morbidity · Facilities</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="cat-name">Labour</div>
+        <div class="cat-count">Employment · Wages · Labour Force</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div class="cat-name">Infrastructure</div>
+        <div class="cat-count">Roads · Energy · Water · ICT</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">TSBoS</div>
+        <p class="footer-tagline">Taraba State Bureau of Statistics — the apex statistical agency of Taraba State and custodian of all official State statistics.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Data Portal</h5>
+        <a href="#indicators">Live Indicators</a>
+        <a href="#dashboards">Dashboards</a>
+        <a href="#categories">Categories</a>
+        <a href="https://github.com/laws2020/tsbs-releases">Releases</a>
+      </div>
+      <div class="footer-col">
+        <h5>tsbsR Package</h5>
+        <a href="https://github.com/laws2020/tsbsR">GitHub Repository</a>
+        <a href="#">User Guide (PDF)</a>
+        <a href="#">Function Reference</a>
+        <a href="#">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h5>Bureau</h5>
+        <a href="#">About TSBoS</a>
+        <a href="#">Publications</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Training</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Taraba State Bureau of Statistics · All rights reserved · tsbsR v0.1.0</div>
+      <div class="footer-badges">
+        <span class="badge">Open Data</span>
+        <span class="badge">Built with R</span>
+        <span class="badge">GitHub Powered</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
+<script>
+// ── Chart defaults ────────────────────────────────────────────────────────
+Chart.defaults.font.family = "'Syne', sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.plugins.legend.labels.boxWidth = 10;
+Chart.defaults.plugins.legend.labels.padding  = 14;
+Chart.defaults.plugins.tooltip.backgroundColor = '#0a1628';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 6;
+
+const MONTHS12 = ['Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan'];
+
+// ── Hero sparkline ────────────────────────────────────────────────────────
+new Chart(document.getElementById('heroChart'), {
+  type: 'line',
+  data: {
+    labels: MONTHS12,
+    datasets: [{
+      data: [20.1,20.8,21.3,22.0,22.6,23.1,23.4,23.9,24.1,24.5,24.3,24.5],
+      borderColor: '#6ee7b7',
+      backgroundColor: 'rgba(110,231,183,0.08)',
+      borderWidth: 2, tension: 0.4, fill: true,
+      pointRadius: 0, pointHoverRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { bodyColor: '#fff' } },
+    scales: { x: { display: false }, y: { display: false } }
+  }
+});
+
+// ── Main indicators chart ─────────────────────────────────────────────────
+const MONTHS27 = Array.from({length:27},(_,i)=>{
+  const d=new Date(2024,0+i); return d.toLocaleString('default',{month:'short',year:'2-digit'});
+});
+new Chart(document.getElementById('mainChart'), {
+  type: 'line',
+  data: {
+    labels: MONTHS27,
+    datasets: [
+      {
+        label: 'Headline',
+        data: [18.5,18.9,19.4,20.1,20.8,21.3,22.0,22.6,23.1,23.4,23.9,24.1,24.5,24.8,23.9,23.2,22.8,22.1,21.9,22.4,23.0,23.6,24.1,24.3,24.5,24.3,24.5],
+        borderColor: '#1b5e35', backgroundColor: 'rgba(27,94,53,0.06)',
+        borderWidth: 2.5, tension: 0.4, fill: true, pointRadius: 0, pointHoverRadius: 4,
+      },
+      {
+        label: 'Food',
+        data: [22.1,23.0,23.8,25.2,26.1,27.0,27.8,28.3,28.9,29.1,29.5,29.8,30.2,30.5,29.8,29.1,28.6,28.0,27.5,28.1,28.8,29.1,29.5,29.2,29.3,28.9,29.3],
+        borderColor: '#b83232', backgroundColor: 'rgba(184,50,50,0.04)',
+        borderWidth: 2, tension: 0.4, fill: false, pointRadius: 0, pointHoverRadius: 4,
+      },
+      {
+        label: 'Core',
+        data: [14.2,14.6,15.1,15.8,16.3,17.0,17.5,17.9,18.4,18.6,18.9,19.1,19.3,19.5,19.0,18.6,18.2,17.8,17.5,17.9,18.3,18.6,18.9,18.8,18.7,18.5,18.7],
+        borderColor: '#c9861a', backgroundColor: 'transparent',
+        borderWidth: 2, borderDash: [5,3], tension: 0.4, fill: false, pointRadius: 0, pointHoverRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top', labels: { color: '#3d4f6b' } },
+      tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 9, color: '#7a8fa8' } },
+      y: { grid: { color: '#f0f0ec' }, ticks: { callback: v => v+'%', color: '#7a8fa8' }, min: 10 }
+    }
+  }
+});
+
+// ── Dashboard featured chart ───────────────────────────────────────────────
+new Chart(document.getElementById('dashChart1'), {
+  type: 'line',
+  data: {
+    labels: MONTHS27,
+    datasets: [
+      {
+        data: [18.5,18.9,19.4,20.1,20.8,21.3,22.0,22.6,23.1,23.4,23.9,24.1,24.5,24.8,23.9,23.2,22.8,22.1,21.9,22.4,23.0,23.6,24.1,24.3,24.5,24.3,24.5],
+        borderColor: 'rgba(110,231,183,0.8)',
+        backgroundColor: 'rgba(110,231,183,0.1)',
+        borderWidth: 2, tension: 0.4, fill: true, pointRadius: 0,
+      },
+      {
+        data: [22.1,23.0,23.8,25.2,26.1,27.0,27.8,28.3,28.9,29.1,29.5,29.8,30.2,30.5,29.8,29.1,28.6,28.0,27.5,28.1,28.8,29.1,29.5,29.2,29.3,28.9,29.3],
+        borderColor: 'rgba(248,113,113,0.7)',
+        backgroundColor: 'transparent',
+        borderWidth: 1.5, tension: 0.4, fill: false, pointRadius: 0,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    scales: { x: { display: false }, y: { display: false } },
+    animation: { duration: 1500, easing: 'easeInOutQuart' }
+  }
+});
+
+// ── Tab switcher ──────────────────────────────────────────────────────────
+const tabData = {
+  prices: [
+    { label:'Headline Inflation', val:'24.5%', sub:'▲ +1.2pp', dir:'up', period:'Q1 2026 · YoY', cls:'green' },
+    { label:'Food Inflation',     val:'29.3%', sub:'▲ +2.1pp', dir:'up', period:'Q1 2026 · YoY', cls:'gold' },
+    { label:'Core (ex-Farm)',     val:'18.7%', sub:'▼ −0.4pp', dir:'down', period:'Q1 2026 · YoY', cls:'red' },
+    { label:'12M Average',        val:'21.8%', sub:'→ Stable', dir:'neu', period:'Rolling 12M', cls:'blue' },
+  ],
+  economy: [
+    { label:'GDP Growth Rate',  val:'3.2%',  sub:'▲ +0.5pp', dir:'down', period:'2025 · Annual', cls:'green' },
+    { label:'State Revenue',    val:'₦84B',  sub:'▲ +11%',   dir:'down', period:'FY 2025',      cls:'gold'  },
+    { label:'Capital Spend',    val:'₦31B',  sub:'▲ +8%',    dir:'down', period:'FY 2025',      cls:'blue'  },
+    { label:'Debt-to-IGR',      val:'2.1×',  sub:'→ Stable', dir:'neu',  period:'Q4 2025',      cls:'red'   },
+  ],
+  social: [
+    { label:'Literacy Rate',    val:'61.4%', sub:'▲ +2.1pp', dir:'down', period:'2023 · Census', cls:'green' },
+    { label:'Population',       val:'3.18M', sub:'▲ +2.4%',  dir:'down', period:'2023 · Census', cls:'gold'  },
+    { label:'Unemployment',     val:'14.6%', sub:'▼ −1.2pp', dir:'down', period:'Q3 2025',       cls:'blue'  },
+    { label:'Health Facilities',val:'312',   sub:'▲ +18 new',dir:'down', period:'2024 · Annual', cls:'red'   },
+  ],
+};
+
+function switchTab(key, el) {
+  document.querySelectorAll('.ind-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const grid = document.getElementById('kpi-grid');
+  grid.style.opacity = '0';
+  grid.style.transform = 'translateY(10px)';
+  setTimeout(() => {
+    grid.innerHTML = tabData[key].map(d => `
+      <div class="ind-card ${d.cls}">
+        <div class="ic-label">${d.label}</div>
+        <div class="ic-val">${d.val}</div>
+        <div class="ic-sub ${d.dir}">${d.sub} vs prev period</div>
+        <div class="ic-period">${d.period}</div>
+      </div>`).join('');
+    grid.style.transition = 'opacity .4s ease, transform .4s ease';
+    grid.style.opacity = '1';
+    grid.style.transform = 'translateY(0)';
+  }, 200);
+}
+
+// ── Scroll nav shadow ─────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', scrollY > 20);
+});
+
+// ── Scroll reveal ─────────────────────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── Smooth scroll for nav links ───────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (!id || id === '#') return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ── Prevent ticker from affecting page scroll ─────────────────────────────
+document.querySelector('.ticker').addEventListener('wheel', e => {
+  e.preventDefault();
+}, { passive: false });
+</script>
+</body>
+</html>
